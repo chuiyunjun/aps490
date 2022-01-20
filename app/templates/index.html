@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import qux %}
+
+{% block content %}
+{% set name='baz' %}
+<h1>Predictive Building Maintenance</h1>
+<ul>
+    <li><a href="{{ url_for('watchlist') }}">Scripts</a></li>
+    <li><a href="{{ url_for('watchlist') }}">Prediction</a></li>
+    <li><a href="{{ url_for('watchlist') }}">Anomaly Dection</a></li>
+    <br/>
+    <button>Send Next Data</button>
+</ul>
+{% endblock %}
