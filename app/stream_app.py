@@ -57,8 +57,7 @@ def ad(past, new):
     data['week_of_year'] = [i.weekofyear for i in data.index]
     data['hour'] = [i.hour for i in data.index]
     data['is_weekday'] = [i.isoweekday() for i in data.index]
-    s = setup(data, session_id=123,
-              categorical_features=['day', 'day_name', 'hour', 'is_weekday', 'day_of_year', 'week_of_year'])
+    s = setup(data, session_id=None)
 
     #isolation forest
     iforest = create_model('iforest')
@@ -102,7 +101,7 @@ def main():
     new.plot(label='new')
     plt.title('LSTM Predicted Primary Air Flow')
     st.pyplot(fig2)
-    ad()
+    ad(past,new)
 
 
 
