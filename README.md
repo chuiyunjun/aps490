@@ -14,7 +14,8 @@
 
 3. Change directories (`cd`) to where you cloned this repository.
 
-4 Initialize conda 
+4. Initialize conda 
+
 ```shell
 $ conda init
 ```
