@@ -40,7 +40,6 @@ class Data:
         mng = pd.concat(mng_list, axis=0)
         mng.sort_values(datetime)
         mng = mng[INPUT_LIST[:-1]]
-        print(mng.shape)
         return mng
     
     def read_weather_data(self):
@@ -53,7 +52,6 @@ class Data:
         
         weather = weather[['Date/Time (LST)', 'Temp (°C)']]
         weather.rename(columns = {'Date/Time (LST)':'DateTime'}, inplace = True)
-        print(weather.shape)
         return weather
     
     def weather_join_mng(self):
@@ -62,10 +60,10 @@ class Data:
         self._mng['DateTime'] = pd.to_datetime(self._mng.DateTime)
         self._mng['DateTime 2'] = self._mng['DateTime'].dt.floor('h')
         data = pd.merge(self._mng, self._weather, how='left', on = 'DateTime 2')
+        data.to_csv('data.csv')
         data = data.dropna(how='any')
         data.rename(columns = {'DateTime 2': datetime}, inplace = True)
         data = data[[datetime, input1, input2, input3, input4, input5]]
-        print(data.shape)
         return data
     
     def normalize_data(self):
@@ -89,6 +87,7 @@ class Data:
 
 
 def sliding_windows(data, seq_length, pred_length, shuffle=True):
+    print(data)
     x = []
     y = []
     samples = []
