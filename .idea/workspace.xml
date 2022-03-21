@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a07bd996-cef6-4af6-9da4-a62c4490a384" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/aps490.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/aps490.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/logs.log" beforeDir="false" afterPath="$PROJECT_DIR$/app/logs.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/stream_app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/stream_app.py" afterDir="false" />
     </list>
@@ -16,8 +19,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/stream_app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="65" lean-forward="true" selection-start-line="65" selection-end-line="65" />
+            <state relative-caret-position="192">
+              <caret line="43" column="23" lean-forward="true" selection-start-line="43" selection-start-column="23" selection-end-line="43" selection-end-column="23" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -29,7 +32,7 @@
         <entry file="file://$PROJECT_DIR$/app/LSTM_model.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="75">
-              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
               <folding>
                 <element signature="e#13#34#0" expanded="true" />
               </folding>
@@ -72,10 +75,10 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="701" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="636" />
     <option name="y" value="23" />
-    <option name="width" value="739" />
+    <option name="width" value="804" />
     <option name="height" value="825" />
   </component>
   <component name="ProjectView">
@@ -90,6 +93,11 @@
             <path>
               <item name="aps490" type="b2602c69:ProjectViewProjectNode" />
               <item name="aps490" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="aps490" type="b2602c69:ProjectViewProjectNode" />
+              <item name="aps490" type="462c0819:PsiDirectoryNode" />
+              <item name="datasets" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -184,10 +192,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="701" y="23" width="739" height="825" extended-state="0" />
-    <editor active="true" />
+    <frame x="636" y="23" width="804" height="825" extended-state="1" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.30779943" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28224775" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -197,9 +204,9 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49964765" weight="0.32891566" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="7" sideWeight="0.4972145" visible="true" weight="0.3287858" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.80501395" weight="0.46793997" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5027855" side_tool="true" visible="true" weight="0.3287858" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49442896" weight="0.3287858" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.79948914" visible="true" weight="0.46793997" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.20051086" side_tool="true" visible="true" weight="0.46793997" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.4930362" weight="0.3287858" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -217,7 +224,7 @@
     <entry file="file://$PROJECT_DIR$/app/LSTM_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
           <folding>
             <element signature="e#13#34#0" expanded="true" />
           </folding>
@@ -226,8 +233,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/stream_app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="65" lean-forward="true" selection-start-line="65" selection-end-line="65" />
+        <state relative-caret-position="192">
+          <caret line="43" column="23" lean-forward="true" selection-start-line="43" selection-start-column="23" selection-end-line="43" selection-end-column="23" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>

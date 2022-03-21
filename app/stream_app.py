@@ -34,19 +34,22 @@ def format_names(name):
   return temp
 
 
-def plot(results, index):
+def plot(results):
     # plot value on y-axis and date on x-axis
     fig = px.line(results, x=results.index, y='Primary Air Air Flow', title='Primary Air Flow', template='plotly_dark')
     # create list of outlier_dates
     outlier_dates = results[results['Anomaly'] == 1].index
     # obtain y value of anomalies to plot
     y_values = [results.loc[i]['Primary Air Air Flow'] for i in outlier_dates]
+    df = pd.DataFrame()
     fig.add_trace(go.Scatter(x=outlier_dates, y=y_values, mode='markers',
                              name='Anomaly',
                              marker=dict(color='red', size=10)))
     st.plotly_chart(fig)
+    st.write(y_values)
 
-def ad(past, new):
+
+def iforest_ad(past, new):
     data = pd.concat([past, new])
     data = pd.DataFrame(data)
 
@@ -62,7 +65,13 @@ def ad(past, new):
     #isolation forest
     iforest = create_model('iforest')
     iforest_results = assign_model(iforest)
-    x = plot(iforest_results[-1200:])
+    st.subheader('Isolation Forest (Local) AD')
+    plot(iforest_results[-1200:])
+    st.subheader('HBOS (Global) AD')
+    hist = create_model('histogram', fraction=0.01)
+    hist_results = assign_model(hist)
+    hist_results.head()
+    plot(hist_results[-240:])
 
 
 def main():
@@ -101,7 +110,9 @@ def main():
     new.plot(label='new')
     plt.title('LSTM Predicted Primary Air Flow')
     st.pyplot(fig2)
-    ad(past,new)
+
+    iforest_ad(past,new)
+
 
 
 
