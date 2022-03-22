@@ -53,7 +53,7 @@ def plot(results, name):
     st.write(y_values)
 
 
-def iforest_ad(past, new,name, f):
+def ad(past, new,name, f):
     data = pd.concat([past, new])
     data = pd.DataFrame(data)
     # creature features from date
@@ -77,20 +77,24 @@ def iforest_ad(past, new,name, f):
     hist_results.head()
     plot(hist_results[-1200:], name)
 
-def main(name = 'Fin Tube Radiation Valve Position' ):
+def generate_block(option='V', model_path = r'/Users/shxryz/aps490/output/GRU_ValveModel.pth'):
     ##format
-    d = data.Data()
+    d = data.Data(option=option)
     df = d.get_og_data()
     df['DateTime'] = pd.to_datetime(df['DateTime'])
     df.set_index('DateTime', inplace=True)
     df.columns = [format_names(col) for col in df.columns]
+    name = df.columns[1]
     scaler = MinMaxScaler()
     scaled = scaler.fit_transform(df)
     norm_df = pd.DataFrame(data=scaled, index=df.index, columns=df.columns)
-    st.title("Monitoring Air Flow Anomalies")
-    st.subheader('Input Data')
-    st.dataframe(df)
-    PATH = r'/Users/shxryz/aps490/output/model.pth'
+    if option == 'V':
+        st.title('Input Data')
+        st.dataframe(df)
+        st.title("Monitoring Valve Position Anomalies")
+    else:
+        st.title("Monitoring Air Flow Anomalies")
+    PATH = model_path
     model = torch.load(PATH, map_location=torch.device('cpu'))
     model.eval()
     last48 = np.array(norm_df[-24 - 48:-24]).reshape(1, 48, 5)
@@ -114,11 +118,17 @@ def main(name = 'Fin Tube Radiation Valve Position' ):
     fig2 = plt.figure()
     past[-240:].plot(figsize=(12, 6))
     new.plot(label='new')
-    plt.title('LSTM Predicted' + name)
+    plt.title('GRU Predicted' + name)
     st.pyplot(fig2)
     #
-    f = st.number_input("Contamination Fraction", min_value=0.00, max_value=0.99, value=0.01, step=0.005)
-    iforest_ad(past,new, name, f)
+    f = st.number_input("Contamination Fraction", min_value=0.00, max_value=0.99, value=0.01, step=0.005, key=name)
+    ad(past, new, name, f)
+
+
+def main():
+    generate_block()
+    generate_block(option='A', model_path= '/Users/shxryz/aps490/output/GRU_AirFlowModel.pth')
+
 
 
 

@@ -20,7 +20,7 @@ INPUT_LIST_V = [datetime, input1, input2, input3, input4, input5]
 INPUT_LIST_A = [datetime, input1, input4, input3, input2, input5]
 
 class Data:
-    def __init__(self, option = 'V', data_root='./prediction/datasets/train/') -> None:
+    def __init__(self, option, data_root='./prediction/datasets/train/') -> None:
 
         if option == 'V':
             self.INPUT_LIST = INPUT_LIST_V
@@ -30,6 +30,7 @@ class Data:
         self._mng = self.read_mng_data(data_root)
         self._weather = self.read_weather_data()
         self._data = self.weather_join_mng()
+        print(self._data)
         self._normalize_data = self.normalize_data()
         
     def get_min(self):
@@ -69,8 +70,7 @@ class Data:
         data.to_csv('data.csv')
         data = data.dropna(how='any')
         data.rename(columns = {'DateTime_x': datetime}, inplace = True)
-        data = data[[datetime, input1, input2, input3, input4, input5]]
-
+        data = data[self.INPUT_LIST]
         return data
     
     def normalize_data(self):

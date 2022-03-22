@@ -4,7 +4,7 @@ import random
 
 import numpy as np
 import torch
-
+import streamlit as st
 from tqdm import tqdm
 import csv
 from prediction.model.config import ModelConfig, Prediction
@@ -27,7 +27,8 @@ def train(
     num_layers: int = 1,
     loss: str = 'huber_0.022',
     model: str = 'gru',
-    option: str = 'V'
+    option: str = 'V',
+    ui: bool = True
 ) -> None:
     random.seed(seed)
     np.random.seed(seed)
@@ -84,13 +85,14 @@ def train(
         
         if (epoch + 1) % 50 == 0:
             print("Epoch: %d, train_loss: %1.5f" % (epoch, train_loss_list[-1].item()))
-    
+    torch.save(model,'temp.pth')
     if not os.path.exists(output_root):
       os.mkdir(output_root)
     if option =='V':
-        torch.save(model, output_root + model + '_ValveModel.pth')
+        torch.save(model, output_root + '_ValveModel.pth')
     else:
-        torch.save(model, output_root + model + '_AirFlowModel.pth')
+        torch.save(model, output_root + 'GRU_AirFlowModel.pth')
+    return 0
 
 
 def validate(
@@ -132,9 +134,9 @@ def validate(
     
     mae = mean_absolute_error(pred_validY, ValidY)
     mape = mean_absolute_percentage_error(pred_validY, ValidY)
-    
-    if not os.path.exists(output_root):
-        os.mkdir(output_root)
+
+    # if not os.path.exists(output_root):
+    #     os.mkdir(output_root)
     
     fields = ['mae', 'mape']
     values = [mae, mape]
@@ -143,10 +145,10 @@ def validate(
       csvwriter = csv.writer(csvfile) 
       csvwriter.writerow(fields) 
       csvwriter.writerow(values)
+    return 0
 
 def test():
-    print('start testing')
-
+    print('start_testing')
 if __name__ == '__main__':
     import fire
     fire.Fire()

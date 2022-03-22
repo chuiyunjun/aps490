@@ -29,11 +29,9 @@ def training_block():
     train = st.button("CLICK TO TRAIN")
     if train:
         st.write("Training.....")
-        run_params(base_command)
-
-
-
-
+        run = run_params(base_command)
+        if run:
+            st.write( "Successfully trained !")
 
 def main():
     training_block()
