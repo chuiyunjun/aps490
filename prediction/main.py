@@ -9,7 +9,11 @@ from tqdm import tqdm
 import csv
 from prediction.model.config import ModelConfig, Prediction
 from prediction.data import Data, sliding_windows
-from sklearn.metrics import mean_absolute_percentage_error, mean_absolute_error
+from sklearn.metrics import mean_absolute_error
+
+def mean_absolute_percentage_error(y_true, y_pred):
+  y_true, y_pred = np.array(y_true), np.array(y_pred)
+  return np.mean(np.abs((y_true - y_pred) / np.maximum(np.ones(len(y_true)), np.abs(y_true))))*100
 
 def train(
     data_root: str = './prediction/datasets/train/',
@@ -27,10 +31,11 @@ def train(
     random.seed(seed)
     np.random.seed(seed)
     torch.random.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.random.manual_seed(seed)
+    # if torch.cuda.is_available():
+    #     torch.cuda.random.manual_seed(seed)
+    #     device = torch.device("cuda")
+    device = torch.device("cpu")
 
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     
     data = Data(data_root)
     normalized_data = data.get_normalized_data()
@@ -95,11 +100,12 @@ def validate(
     random.seed(seed)
     np.random.seed(seed)
     torch.random.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.random.manual_seed(seed)
-    
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    
+    # if torch.cuda.is_available():
+    #     torch.cuda.random.manual_seed(seed)
+    #
+    # device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    #
+    device = torch.device("cpu")
     data = Data(data_root)
     normalized_data = data.get_normalized_data()
     
