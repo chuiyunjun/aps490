@@ -77,7 +77,6 @@ def iforest_ad(past, new,name, f):
     hist_results.head()
     plot(hist_results[-1200:], name)
 
-
 def main(name = 'Fin Tube Radiation Valve Position' ):
     ##format
     d = data.Data()
@@ -91,8 +90,6 @@ def main(name = 'Fin Tube Radiation Valve Position' ):
     st.title("Monitoring Air Flow Anomalies")
     st.subheader('Input Data')
     st.dataframe(df)
-
-
     PATH = r'/Users/shxryz/aps490/output/model.pth'
     model = torch.load(PATH, map_location=torch.device('cpu'))
     model.eval()

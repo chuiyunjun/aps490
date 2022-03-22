@@ -17,18 +17,15 @@ input4 = 'Modern Niagara > CPPIB > 17th Flr > VAV-1704 > Primary Air.Air Flow'
 input5 = 'Temp (°C)'
 
 INPUT_LIST_V = [datetime, input1, input2, input3, input4, input5]
-# date = 'DateTime_x'
-# input1 = 'Temp (°C)'
-# input2 = 'Modern Niagara > CPPIB > 17th Flr > VAV-1704 > Primary Air.Air Flow'
-# input3 = 'Modern Niagara > CPPIB > 17th Flr > VAV-1704 > Zone Air.Temperature'
-# input4 = 'Modern Niagara > CPPIB > 17th Flr > VAV-1704 > Fin Tube Radiation.Valve Position'
-# input5 = 'Modern Niagara > CPPIB > 17th Flr > VAV-1704 > Primary Air.Air Flow Setpoint'
-#
-# INPUT_LIST_A = [input1, input2, input3, input4, input5]
+INPUT_LIST_A = [datetime, input1, input4, input3, input2, input5]
+
 class Data:
-    def __init__(self, data_root='./prediction/datasets/train/') -> None:
+    def __init__(self, option = 'V', data_root='./prediction/datasets/train/') -> None:
 
-
+        if option == 'V':
+            self.INPUT_LIST = INPUT_LIST_V
+        else:
+            self.INPUT_LIST = INPUT_LIST_A
         self._min, self._max = None, None
         self._mng = self.read_mng_data(data_root)
         self._weather = self.read_weather_data()
@@ -48,7 +45,7 @@ class Data:
             mng_list.append(df)
         mng = pd.concat(mng_list, axis=0)
         mng.sort_values(datetime)
-        mng = mng[INPUT_LIST_V[:-1]]
+        mng = mng[self.INPUT_LIST[:-1]]
         return mng
     
     def read_weather_data(self):
@@ -77,7 +74,7 @@ class Data:
         return data
     
     def normalize_data(self):
-        inputs = self._data[INPUT_LIST_V[1:]]
+        inputs = self._data[self.INPUT_LIST[1:]]
         sc = MinMaxScaler()
         normalized_inputs = sc.fit_transform(inputs)
         
@@ -85,7 +82,7 @@ class Data:
         self._max = sc.data_max_[1]
         
         #
-        datetime = self._data[INPUT_LIST_V[:1]]
+        datetime = self._data[self.INPUT_LIST[:1]]
         
         return normalized_inputs
 

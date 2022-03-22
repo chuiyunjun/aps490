@@ -27,6 +27,7 @@ def train(
     num_layers: int = 1,
     loss: str = 'huber_0.022',
     model: str = 'gru',
+    option: str = 'V'
 ) -> None:
     random.seed(seed)
     np.random.seed(seed)
@@ -37,7 +38,8 @@ def train(
     device = torch.device("cpu")
 
     
-    data = Data(data_root)
+    data = Data(option=option, data_root=data_root)
+
     normalized_data = data.get_normalized_data()
     
     params = {
@@ -49,14 +51,13 @@ def train(
         'num_layers': num_layers,
         'input_size': normalized_data.shape[1],
         'loss': loss,
-        'model': model,
+        'model': model
     }
     
     trainX, trainY = sliding_windows(normalized_data, seq_length, pred_length)
 
     trainX = trainX.to(device)
     trainY = trainY.to(device)
-
 
     model_config = ModelConfig(params)
     model = Prediction(model_config, device).get_model()
@@ -86,7 +87,10 @@ def train(
     
     if not os.path.exists(output_root):
       os.mkdir(output_root)
-    torch.save(model, output_root + 'model.pth')
+    if option =='V':
+        torch.save(model, output_root + model + '_ValveModel.pth')
+    else:
+        torch.save(model, output_root + model + '_AirFlowModel.pth')
 
 
 def validate(
