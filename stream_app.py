@@ -69,13 +69,13 @@ def ad(past, new,name, f):
     iforest = create_model('iforest',fraction=f)
     iforest_results = assign_model(iforest)
     st.subheader('Isolation Forests')
-    plot(iforest_results[-1200:], name)
+    plot(iforest_results, name)
     st.subheader('HBOS (Global) AD')
     #HBOS
     hist = create_model('histogram', fraction=f)
     hist_results = assign_model(hist)
     hist_results.head()
-    plot(hist_results[-1200:], name)
+    plot(hist_results, name)
 
 def generate_block(option='V', model_path = r'/Users/shxryz/aps490/output/GRU_ValveModel.pth'):
     ##format
@@ -121,7 +121,7 @@ def generate_block(option='V', model_path = r'/Users/shxryz/aps490/output/GRU_Va
     plt.title('GRU Predicted' + name)
     st.pyplot(fig2)
     #
-    f = st.number_input("Contamination Fraction", min_value=0.00, max_value=0.99, value=0.01, step=0.005, key=name)
+    f = st.number_input("Contamination Fraction", min_value=0.00, max_value=0.99, value=0.01, step=0.0025, key=name)
     ad(past, new, name, f)
 
 
