@@ -1,6 +1,6 @@
 # Predictive Building System Maintenance -- Anomaly Detection
 
-## installation
+## installation (Linux environment)
 ### install miniconda3
 1. Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html):
 
