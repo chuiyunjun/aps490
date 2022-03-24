@@ -21,7 +21,6 @@ INPUT_LIST_A = [datetime, input1, input4, input3, input2, input5]
 
 class Data:
     def __init__(self, option, data_root='./prediction/datasets/train/') -> None:
-
         if option == 'V':
             self.INPUT_LIST = INPUT_LIST_V
         else:
@@ -30,7 +29,6 @@ class Data:
         self._mng = self.read_mng_data(data_root)
         self._weather = self.read_weather_data()
         self._data = self.weather_join_mng()
-        print(self._data)
         self._normalize_data = self.normalize_data()
         
     def get_min(self):
@@ -97,7 +95,6 @@ class Data:
 
 
 def sliding_windows(data, seq_length, pred_length, shuffle=True):
-    print(data)
     x = []
     y = []
     samples = []
@@ -112,6 +109,12 @@ def sliding_windows(data, seq_length, pred_length, shuffle=True):
     y = y[:,:,1]
     
     return torch.Tensor(x), torch.Tensor(y)
+
+
+def format_path(path: str):
+    if not path.endswith('/'):
+        return path + '/'
+    return path
     
     
         

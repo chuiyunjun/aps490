@@ -8,7 +8,7 @@ import streamlit as st
 from tqdm import tqdm
 import csv
 from prediction.model.config import ModelConfig, Prediction
-from prediction.data import Data, sliding_windows
+from prediction.data import Data, format_path, sliding_windows
 from sklearn.metrics import mean_absolute_error
 
 def mean_absolute_percentage_error(y_true, y_pred):
@@ -33,14 +33,15 @@ def train(
     random.seed(seed)
     np.random.seed(seed)
     torch.random.manual_seed(seed)
-    # if torch.cuda.is_available():
-    #     torch.cuda.random.manual_seed(seed)
-    #     device = torch.device("cuda")
-    device = torch.device("cpu")
-
+    if torch.cuda.is_available():
+        torch.cuda.random.manual_seed(seed)
     
-    data = Data(option=option, data_root=data_root)
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    
+    data_root = format_path(data_root)
+    output_root = format_path(output_root)
 
+    data = Data(option=option, data_root=data_root)
     normalized_data = data.get_normalized_data()
     
     params = {
@@ -85,7 +86,7 @@ def train(
         
         if (epoch + 1) % 50 == 0:
             print("Epoch: %d, train_loss: %1.5f" % (epoch, train_loss_list[-1].item()))
-    torch.save(model,'temp.pth')
+    torch.save(model,'model.pth')
     if not os.path.exists(output_root):
       os.mkdir(output_root)
     if option =='V':
@@ -106,12 +107,14 @@ def validate(
     random.seed(seed)
     np.random.seed(seed)
     torch.random.manual_seed(seed)
-    # if torch.cuda.is_available():
-    #     torch.cuda.random.manual_seed(seed)
-    #
-    # device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    #
-    device = torch.device("cpu")
+    if torch.cuda.is_available():
+        torch.cuda.random.manual_seed(seed)
+    
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    
+    data_root = format_path(data_root)
+    output_root = format_path(output_root)
+    
     data = Data(data_root)
     normalized_data = data.get_normalized_data()
     
@@ -135,8 +138,8 @@ def validate(
     mae = mean_absolute_error(pred_validY, ValidY)
     mape = mean_absolute_percentage_error(pred_validY, ValidY)
 
-    # if not os.path.exists(output_root):
-    #     os.mkdir(output_root)
+    if not os.path.exists(output_root):
+        os.mkdir(output_root)
     
     fields = ['mae', 'mape']
     values = [mae, mape]
@@ -149,6 +152,7 @@ def validate(
 
 def test():
     print('start_testing')
+
 if __name__ == '__main__':
     import fire
     fire.Fire()
