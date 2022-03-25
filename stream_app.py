@@ -102,6 +102,9 @@ def generate_block(option='V', model_path = r'./output/ValveModel.pth'):
     x = x.to(device=device)
     with torch.no_grad():
         predict = model(x)
+        if option == 'V':
+            predict[predict > 1] = 1
+            predict[predict < 0] = 0
     predict = predict.cpu()
     pred = np.array(predict).reshape((24,))
     pred = d.recover_y(pred)

@@ -74,22 +74,23 @@ def train(
     for epoch in tqdm(range(model_config.get_epoch_num())):
         
         outputs = model(trainX)
+        if option == 'V':
+            outputs[outputs > 1] = 1
+            outputs[outputs < 0] = 0
         optimizer.zero_grad()
 
         # obtain the loss function
         train_loss = loss(outputs, trainY)
-
         train_loss.backward()
-        
         optimizer.step()
-
         train_loss_list.append(train_loss)
         
         if (epoch + 1) % 50 == 0:
             print("Epoch: %d, train_loss: %1.5f" % (epoch, train_loss_list[-1].item()))
-    torch.save(model,'model.pth')
+    
     if not os.path.exists(output_root):
       os.mkdir(output_root)
+
     if option =='V':
         torch.save(model, output_root + 'ValveModel.pth')
     else:
@@ -130,14 +131,16 @@ def validate(
     
     with torch.no_grad():
         pred_validY = model(ValidX)
+        if option == 'V':
+            outputs[outputs > 1] = 1
+            outputs[outputs < 0] = 0
     
     pred_validY = pred_validY.cpu().numpy()
     ValidY = ValidY.cpu().numpy()
     
     pred_validY = data.recover_y(pred_validY)
     ValidY = data.recover_y(ValidY)
-    print(data._min, data._max)
-    print(pred_validY, ValidY)
+
     mae = mean_absolute_error(pred_validY, ValidY)
     # mape = mean_absolute_percentage_error(pred_validY, ValidY)
 
