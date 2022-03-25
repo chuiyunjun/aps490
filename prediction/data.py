@@ -1,6 +1,5 @@
 
 from sklearn.preprocessing import MinMaxScaler
-from torch.utils.data import Dataset, DataLoader
 import os
 import pandas as pd
 import random
@@ -21,6 +20,7 @@ INPUT_LIST_A = [datetime, input1, input4, input3, input2, input5]
 
 class Data:
     def __init__(self, option, data_root='./prediction/datasets/train/') -> None:
+        self._test = None
         if option == 'V':
             self.INPUT_LIST = INPUT_LIST_V
         else:
@@ -30,6 +30,7 @@ class Data:
         self._weather = self.read_weather_data()
         self._data = self.weather_join_mng()
         self._normalize_data = self.normalize_data()
+        
         
     def get_min(self):
         return self._min
@@ -72,15 +73,22 @@ class Data:
         return data
     
     def normalize_data(self):
-        inputs = self._data[self.INPUT_LIST[1:]]
+        data = self._data.copy()
+        data['DateTime'] = pd.to_datetime(data['DateTime'])
+        data.set_index('DateTime', inplace=True)
+        data['week_of_year'] = [i.weekofyear for i in data.index]
+        data['hour'] = [i.hour for i in data.index]
+        data['is_weekday'] = [i.isoweekday() for i in data.index]
+        # inputs = self._data[self.INPUT_LIST[1:]]
         sc = MinMaxScaler()
-        normalized_inputs = sc.fit_transform(inputs)
-        
+        normalized_inputs = sc.fit_transform(data)
+        print(data.columns)
         self._min = sc.data_min_[1]
         self._max = sc.data_max_[1]
+        print(self._min, self._max)
         
         #
-        datetime = self._data[self.INPUT_LIST[:1]]
+        #datetime = self._data[self.INPUT_LIST[:1]]
         
         return normalized_inputs
 

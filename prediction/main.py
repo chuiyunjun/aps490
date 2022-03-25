@@ -11,9 +11,10 @@ from prediction.model.config import ModelConfig, Prediction
 from prediction.data import Data, format_path, sliding_windows
 from sklearn.metrics import mean_absolute_error
 
-def mean_absolute_percentage_error(y_true, y_pred):
-  y_true, y_pred = np.array(y_true), np.array(y_pred)
-  return np.mean(np.abs((y_true - y_pred) / np.maximum(np.ones(len(y_true)), np.abs(y_true))))*100
+
+# def mean_absolute_percentage_error(y_true, y_pred):
+#   y_true, y_pred = np.array(y_true), np.array(y_pred)
+#   return np.mean(np.abs((y_true - y_pred) / np.maximum(np.ones(len(y_true)), np.abs(y_true))))*100
 
 def train(
     data_root: str = './prediction/datasets/train/',
@@ -98,11 +99,12 @@ def train(
 
 def validate(
     checkpoint_path: str,
-    output_root: str,
+    output_root: str = './output/',
     data_root: str = './prediction/datasets/valid/',
     seed: int = 42,
     seq_length: int = 48,
     pred_length: int =24,
+    option: str = 'V',
 ):
     random.seed(seed)
     np.random.seed(seed)
@@ -115,7 +117,7 @@ def validate(
     data_root = format_path(data_root)
     output_root = format_path(output_root)
     
-    data = Data(data_root)
+    data = Data(option=option, data_root=data_root)
     normalized_data = data.get_normalized_data()
     
     ValidX, ValidY = sliding_windows(normalized_data, seq_length, pred_length, shuffle=False)
@@ -134,15 +136,16 @@ def validate(
     
     pred_validY = data.recover_y(pred_validY)
     ValidY = data.recover_y(ValidY)
-    
+    print(data._min, data._max)
+    print(pred_validY, ValidY)
     mae = mean_absolute_error(pred_validY, ValidY)
-    mape = mean_absolute_percentage_error(pred_validY, ValidY)
+    # mape = mean_absolute_percentage_error(pred_validY, ValidY)
 
     if not os.path.exists(output_root):
         os.mkdir(output_root)
     
-    fields = ['mae', 'mape']
-    values = [mae, mape]
+    fields = ['mae']
+    values = [mae]
     filename = "report.csv"
     with open(output_root + filename, 'w') as csvfile: 
       csvwriter = csv.writer(csvfile) 
@@ -152,6 +155,8 @@ def validate(
 
 def test():
     print('start_testing')
+    data = Data('V')
+    print(data._test)
 
 if __name__ == '__main__':
     import fire
