@@ -1,6 +1,6 @@
 # Predictive Building System Maintenance -- Anomaly Detection
 
-[[__TOC__]]
+[[_TOC_]]
 
 ## 1. Recommanded environment setting
 ### 1.1 install miniconda3
