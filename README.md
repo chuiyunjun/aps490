@@ -1,8 +1,10 @@
 # Predictive Building System Maintenance -- Anomaly Detection
 
+[[__TOC__]]
+
 ## 1. Recommanded environment setting
-### install miniconda3
-1. Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html):
+### 1.1 install miniconda3
+a. Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html):
 
    (Linux OS;  installation in another os could be found in the link above)
    ```bash
@@ -11,22 +13,22 @@
    rm Miniconda.sh
    ```
 
-2. Close and re-open your terminal session.
+b. Close and re-open your terminal session.
 
-3. Change directories (`cd`) to where you cloned this repository.
+c. Change directories (`cd`) to where you cloned this repository.
 
-4. Initialize conda 
+d. Initialize conda 
 
 ```shell
 $ conda init
 ```
 
-### create an environment inside the conda
+### 1.2 create an environment inside the conda
 ```shell
 $ conda env create -f environment.yml
 ```
 
-### activate the environment
+### 1.3 activate the environment
 ```shell
 $ conda activate aps490
 ```
