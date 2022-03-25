@@ -1,6 +1,6 @@
 # Predictive Building System Maintenance -- Anomaly Detection
 
-[[_TOC_]]
+
 
 ## 1. Recommanded environment setting
 ### 1.1 install miniconda3
@@ -49,7 +49,7 @@ Keyword arguments:
 - (optional)`learning_rate`: learning rate of the adam optimizer. Default: `0.0008`
 - (optional)`hidden_size`: hidden_size of RNN . Default: `7`
 - (optional)`num_layers`: num_layers of RNN. Default: `1`
-- (optional)`loss`: training loss function. (`mae`, 'mse', or `huber_<delta>`) Default: `huber_0.022`
+- (optional)`loss`: training loss function. (`mae`, `mse`, or `huber_<delta>`) Default: `huber_0.022`
 - (optional)`model`: RNN model type (`lstm` or `gru`). Default: `gru`
 
 Example:
@@ -70,7 +70,7 @@ $ python -m prediction.main validate --output_root=<output directory root> --che
 ```
 Keyword arguments:
 - `checkpoint_path`: path to the model that will be evaulated
-- `output_root`: the output directory root
+- (optional)`output_root`: the output directory root. Default: `./output/`
 - (optional)`data_root`: validation dataset directory root. Default: `./prediction/datasets/valid/`
 - (optional)`seed`: random seed. Default: `42`
 - (optional)`seq_length`: squence length of the sliding window. Default: `48`
