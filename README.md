@@ -1,10 +1,10 @@
 # Predictive Building System Maintenance -- Anomaly Detection
 
-## installation
+## 1. Recommanded environment setting
 ### install miniconda3
 1. Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html):
 
-   (Recommand: Linux OS)
+   (Linux OS;  installation in another os could be found in the link above)
    ```bash
    curl 'https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh' > Miniconda.sh
    bash Miniconda.sh
@@ -32,8 +32,8 @@ $ conda activate aps490
 ```
 
 
-## Training
-You may use the following command to train the model.
+## 2. Training
+* You may use the following command to train the model.
 ```shell
 $ python -m predection.main train
 ```
@@ -55,7 +55,13 @@ Example:
 $ python -m prediction.main train --output_root=./output/
 ```
 
-## Validate
+* UI Support:
+```shell
+$ streamlit run train_app.py
+```
+
+
+## 3. Validate
 You may use the following command to train the model.
 ```shell
 $ python -m prediction.main validate --output_root=<output directory root> --checkpoint_path=<checkpoint path>
@@ -71,4 +77,13 @@ Keyword arguments:
 Example:
 ```shell
 $ python -m prediction.main validate --output_root=./output/ --checkpoint_path=./output/model.pth
+```
+
+
+## 4. UI main page
+
+Visualize the prediction and anomaly analysis
+
+```shell
+$ streamlit run stream_app.py
 ```
