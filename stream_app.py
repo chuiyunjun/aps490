@@ -14,10 +14,10 @@ import plotly.express as px
 from sklearn.preprocessing import MinMaxScaler
 import os
 import random
-from pynput.keyboard import Key, Controller
 
 
 
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
 def load_input_data():
     
@@ -77,7 +77,7 @@ def ad(past, new,name, f):
     hist_results.head()
     plot(hist_results, name)
 
-def generate_block(option='V', model_path = r'/Users/shxryz/aps490/output/GRU_ValveModel.pth'):
+def generate_block(option='V', model_path = r'./output/ValveModel.pth'):
     ##format
     d = data.Data(option=option)
     df = d.get_og_data()
@@ -95,12 +95,14 @@ def generate_block(option='V', model_path = r'/Users/shxryz/aps490/output/GRU_Va
     else:
         st.title("Monitoring Air Flow Anomalies")
     PATH = model_path
-    model = torch.load(PATH, map_location=torch.device('cpu'))
+    model = torch.load(PATH, map_location=device)
     model.eval()
     last48 = np.array(norm_df[-24 - 48:-24]).reshape(1, 48, 5)
     x = torch.from_numpy(last48).float()
+    x = x.to(device=device)
     with torch.no_grad():
         predict = model(x)
+    predict = predict.cpu()
     pred = np.array(predict).reshape((24,))
     pred = d.recover_y(pred)
     original = df[-24:][name]
@@ -127,7 +129,7 @@ def generate_block(option='V', model_path = r'/Users/shxryz/aps490/output/GRU_Va
 
 def main():
     generate_block()
-    generate_block(option='A', model_path= '/Users/shxryz/aps490/output/GRU_AirFlowModel.pth')
+    generate_block(option='A', model_path= './output/AirFlowModel.pth')
 
 
 

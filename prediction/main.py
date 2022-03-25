@@ -90,9 +90,9 @@ def train(
     if not os.path.exists(output_root):
       os.mkdir(output_root)
     if option =='V':
-        torch.save(model, output_root + '_ValveModel.pth')
+        torch.save(model, output_root + 'ValveModel.pth')
     else:
-        torch.save(model, output_root + 'GRU_AirFlowModel.pth')
+        torch.save(model, output_root + 'AirFlowModel.pth')
     return 0
 
 
