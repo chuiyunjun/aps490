@@ -97,7 +97,7 @@ def generate_block(option='V', model_path = r'./output/ValveModel.pth'):
     PATH = model_path
     model = torch.load(PATH, map_location=device)
     model.eval()
-    last48 = np.array(norm_df[-24 - 48:-24]).reshape(1, 48, 5)
+    last48 = np.array(norm_df[-24 - 48:-24]).reshape(1, 48, len(norm_df.columns))
     x = torch.from_numpy(last48).float()
     x = x.to(device=device)
     with torch.no_grad():

@@ -70,25 +70,23 @@ class Data:
         data = data.dropna(how='any')
         data.rename(columns = {'DateTime_x': datetime}, inplace = True)
         data = data[self.INPUT_LIST]
-        return data
-    
-    def normalize_data(self):
-        data = self._data.copy()
         data['DateTime'] = pd.to_datetime(data['DateTime'])
-        data.set_index('DateTime', inplace=True)
+        data.set_index('DateTime', drop=False, inplace=True)
         data['week_of_year'] = [i.weekofyear for i in data.index]
         data['hour'] = [i.hour for i in data.index]
         data['is_weekday'] = [i.isoweekday() for i in data.index]
-        # inputs = self._data[self.INPUT_LIST[1:]]
+        return data
+    
+    def normalize_data(self):
+
+        data = self._data.copy()
+        data = data.drop(['DateTime'], axis=1)
+        
         sc = MinMaxScaler()
         normalized_inputs = sc.fit_transform(data)
-        print(data.columns)
+
         self._min = sc.data_min_[1]
         self._max = sc.data_max_[1]
-        print(self._min, self._max)
-        
-        #
-        #datetime = self._data[self.INPUT_LIST[:1]]
         
         return normalized_inputs
 
