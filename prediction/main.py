@@ -20,7 +20,7 @@ def train(
     output_root: str = './output/',
     seed: int = 42,
     seq_length: int = 48,
-    pred_length: int =24,
+    pred_length: int = 24,
     epoch_num: int = 1000,
     learning_rate: float = 0.0008,
     hidden_size: int = 7,
@@ -33,10 +33,11 @@ def train(
     random.seed(seed)
     np.random.seed(seed)
     torch.random.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.random.manual_seed(seed)
-    
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    device = torch.device("cpu")
+    # if torch.cuda.is_available():
+    #     torch.cuda.random.manual_seed(seed)
+    #
+    # device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     
     data_root = format_path(data_root)
     output_root = format_path(output_root)
@@ -55,6 +56,8 @@ def train(
         'loss': loss,
         'model': model
     }
+
+    name = params['model'] + '_' + params['option'] + '_'
     
     trainX, trainY = sliding_windows(normalized_data, seq_length, pred_length)
 
@@ -86,13 +89,13 @@ def train(
         
         if (epoch + 1) % 50 == 0:
             print("Epoch: %d, train_loss: %1.5f" % (epoch, train_loss_list[-1].item()))
-    torch.save(model,'model.pth')
+    torch.save(model,'temp.pth')
+
     if not os.path.exists(output_root):
-      os.mkdir(output_root)
-    if option =='V':
-        torch.save(model, output_root + '_ValveModel.pth')
-    else:
-        torch.save(model, output_root + 'GRU_AirFlowModel.pth')
+        os.mkdir(output_root)
+
+    torch.save(model, output_root + name + '.pth')
+
     return 0
 
 
@@ -102,16 +105,16 @@ def validate(
     data_root: str = './prediction/datasets/valid/',
     seed: int = 42,
     seq_length: int = 48,
-    pred_length: int =24,
+    pred_length: int = 24,
 ):
     random.seed(seed)
     np.random.seed(seed)
     torch.random.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.random.manual_seed(seed)
-    
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    
+    # if torch.cuda.is_available():
+    #     torch.cuda.random.manual_seed(seed)
+    #
+    # device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    device = torch.device("cpu")
     data_root = format_path(data_root)
     output_root = format_path(output_root)
     
@@ -151,8 +154,10 @@ def validate(
     return 0
 
 def test():
+
     print('start_testing')
 
 if __name__ == '__main__':
+
     import fire
     fire.Fire()
