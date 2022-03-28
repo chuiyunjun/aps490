@@ -11,17 +11,16 @@ from prediction.model.config import ModelConfig, Prediction
 from prediction.data import Data, format_path, sliding_windows
 from sklearn.metrics import mean_absolute_error
 
-
-# def mean_absolute_percentage_error(y_true, y_pred):
-#   y_true, y_pred = np.array(y_true), np.array(y_pred)
-#   return np.mean(np.abs((y_true - y_pred) / np.maximum(np.ones(len(y_true)), np.abs(y_true))))*100
+def mean_absolute_percentage_error(y_true, y_pred):
+  y_true, y_pred = np.array(y_true), np.array(y_pred)
+  return np.mean(np.abs((y_true - y_pred) / np.maximum(np.ones(len(y_true)), np.abs(y_true))))*100
 
 def train(
     data_root: str = './prediction/datasets/train/',
     output_root: str = './output/',
     seed: int = 42,
     seq_length: int = 48,
-    pred_length: int =24,
+    pred_length: int = 24,
     epoch_num: int = 1000,
     learning_rate: float = 0.0008,
     hidden_size: int = 7,
@@ -34,10 +33,11 @@ def train(
     random.seed(seed)
     np.random.seed(seed)
     torch.random.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.random.manual_seed(seed)
-    
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    device = torch.device("cpu")
+    # if torch.cuda.is_available():
+    #     torch.cuda.random.manual_seed(seed)
+    #
+    # device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     
     data_root = format_path(data_root)
     output_root = format_path(output_root)
@@ -56,6 +56,8 @@ def train(
         'loss': loss,
         'model': model
     }
+
+    name = params['model'] + '_' + params['option'] + '_'
     
     trainX, trainY = sliding_windows(normalized_data, seq_length, pred_length)
 
@@ -74,51 +76,49 @@ def train(
     for epoch in tqdm(range(model_config.get_epoch_num())):
         
         outputs = model(trainX)
-        if option == 'V':
-            outputs[outputs > 1] = 1
-            outputs[outputs < 0] = 0
         optimizer.zero_grad()
 
         # obtain the loss function
         train_loss = loss(outputs, trainY)
+
         train_loss.backward()
+        
         optimizer.step()
+
         train_loss_list.append(train_loss)
         
         if (epoch + 1) % 50 == 0:
             print("Epoch: %d, train_loss: %1.5f" % (epoch, train_loss_list[-1].item()))
-    
-    if not os.path.exists(output_root):
-      os.mkdir(output_root)
+    torch.save(model,'temp.pth')
 
-    if option =='V':
-        torch.save(model, output_root + 'ValveModel.pth')
-    else:
-        torch.save(model, output_root + 'AirFlowModel.pth')
+    if not os.path.exists(output_root):
+        os.mkdir(output_root)
+
+    torch.save(model, output_root + name + '.pth')
+
     return 0
 
 
 def validate(
     checkpoint_path: str,
-    output_root: str = './output/',
+    output_root: str,
     data_root: str = './prediction/datasets/valid/',
     seed: int = 42,
     seq_length: int = 48,
-    pred_length: int =24,
-    option: str = 'V',
+    pred_length: int = 24,
 ):
     random.seed(seed)
     np.random.seed(seed)
     torch.random.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.random.manual_seed(seed)
-    
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    
+    # if torch.cuda.is_available():
+    #     torch.cuda.random.manual_seed(seed)
+    #
+    # device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    device = torch.device("cpu")
     data_root = format_path(data_root)
     output_root = format_path(output_root)
     
-    data = Data(option=option, data_root=data_root)
+    data = Data(data_root)
     normalized_data = data.get_normalized_data()
     
     ValidX, ValidY = sliding_windows(normalized_data, seq_length, pred_length, shuffle=False)
@@ -131,24 +131,21 @@ def validate(
     
     with torch.no_grad():
         pred_validY = model(ValidX)
-        if option == 'V':
-            outputs[outputs > 1] = 1
-            outputs[outputs < 0] = 0
     
     pred_validY = pred_validY.cpu().numpy()
     ValidY = ValidY.cpu().numpy()
     
     pred_validY = data.recover_y(pred_validY)
     ValidY = data.recover_y(ValidY)
-
+    
     mae = mean_absolute_error(pred_validY, ValidY)
-    # mape = mean_absolute_percentage_error(pred_validY, ValidY)
+    mape = mean_absolute_percentage_error(pred_validY, ValidY)
 
     if not os.path.exists(output_root):
         os.mkdir(output_root)
     
-    fields = ['mae']
-    values = [mae]
+    fields = ['mae', 'mape']
+    values = [mae, mape]
     filename = "report.csv"
     with open(output_root + filename, 'w') as csvfile: 
       csvwriter = csv.writer(csvfile) 
@@ -157,10 +154,10 @@ def validate(
     return 0
 
 def test():
+
     print('start_testing')
-    data = Data('V')
-    print(data._test)
 
 if __name__ == '__main__':
+
     import fire
     fire.Fire()

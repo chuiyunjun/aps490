@@ -6,7 +6,7 @@ import torch
 class GRUNet(nn.Module):
     def __init__(self, num_classes, input_size, hidden_size, num_layers, device):
         super(GRUNet, self).__init__()
-        
+        # self.device = device
         self.device = device
         self.num_classes = num_classes
         self.num_layers = num_layers
@@ -18,6 +18,7 @@ class GRUNet(nn.Module):
         self.fc = nn.Linear(hidden_size, num_classes)
 
     def forward(self, x):
+        self.device = torch.device("cpu")
         h_0 = Variable(torch.zeros(
             self.num_layers, x.size(0), self.hidden_size)).to(self.device)
         
