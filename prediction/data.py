@@ -26,6 +26,7 @@ class Data:
         else:
             self.INPUT_LIST = INPUT_LIST_A
         self._min, self._max = None, None
+        self._min_x, self._max_x = None, None
         self._mng = self.read_mng_data(data_root)
         self._weather = self.read_weather_data()
         self._data = self.weather_join_mng()
@@ -85,6 +86,7 @@ class Data:
         sc = MinMaxScaler()
         normalized_inputs = sc.fit_transform(data)
 
+        self._min_x, self._max_x = sc.data_min_, sc.data_max_
         self._min = sc.data_min_[1]
         self._max = sc.data_max_[1]
         
@@ -96,20 +98,36 @@ class Data:
     def get_normalized_data(self):
         return self._normalize_data
     
+    def get_raw_data(self):
+        self._weather['DateTime 2'] = pd.to_datetime(self._weather.DateTime)
+        self._mng['DateTime'] = pd.to_datetime(self._mng.DateTime)
+        self._mng['DateTime 2'] = self._mng['DateTime'].dt.floor('h')
+        data = pd.merge(self._mng, self._weather, how='left', on = 'DateTime 2')
+        data.to_csv('data.csv')
+        data = data.dropna(how='any')
+        data.rename(columns = {'DateTime_x': datetime}, inplace = True)
+        data = data[self.INPUT_LIST[1:]]
+        return data
+    
     def recover_y(self, normalized_y):
         return self._min + (self._max - self._min) * normalized_y
+    
+    def recover_x(self, normalized_x):
+        return self._min_x + (self._max_x - self._min_x) * normalized_x
 
 
 def sliding_windows(data, seq_length, pred_length, shuffle=True):
     x = []
     y = []
     samples = []
+
     for i in range(len(data)-seq_length-pred_length):
         sample = data[i:(i+seq_length+pred_length)]
         if np.array(sample[seq_length:,1]).prod() != 0:
             samples.append(sample)
     if shuffle:
         random.shuffle(samples)
+
     x = np.array(samples)[:,:seq_length,:]
     y = np.array(samples)[:,seq_length:,:]
     y = y[:,:,1]

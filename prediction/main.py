@@ -1,6 +1,7 @@
 import os
 from pickletools import optimize
 import random
+from click import option
 
 import numpy as np
 import torch
@@ -10,6 +11,7 @@ import csv
 from prediction.model.config import ModelConfig, Prediction
 from prediction.data import Data, format_path, sliding_windows
 from sklearn.metrics import mean_absolute_error
+import matplotlib.pyplot as plt
 
 
 # def mean_absolute_percentage_error(y_true, y_pred):
@@ -74,9 +76,6 @@ def train(
     for epoch in tqdm(range(model_config.get_epoch_num())):
         
         outputs = model(trainX)
-        if option == 'V':
-            outputs[outputs > 1] = 1
-            outputs[outputs < 0] = 0
         optimizer.zero_grad()
 
         # obtain the loss function
@@ -131,18 +130,20 @@ def validate(
     
     with torch.no_grad():
         pred_validY = model(ValidX)
-        if option == 'V':
-            outputs[outputs > 1] = 1
-            outputs[outputs < 0] = 0
     
     pred_validY = pred_validY.cpu().numpy()
     ValidY = ValidY.cpu().numpy()
-    
     pred_validY = data.recover_y(pred_validY)
     ValidY = data.recover_y(ValidY)
+    
 
     mae = mean_absolute_error(pred_validY, ValidY)
+    
     # mape = mean_absolute_percentage_error(pred_validY, ValidY)
+    
+    ValidX = data.recover_x(ValidX.cpu().numpy())
+    
+    visualize_sample(option, pred_validY, ValidY)
 
     if not os.path.exists(output_root):
         os.mkdir(output_root)
@@ -156,10 +157,28 @@ def validate(
       csvwriter.writerow(values)
     return 0
 
-def test():
-    print('start_testing')
-    data = Data('V')
-    print(data._test)
+def visualize_sample(option, pred_validY, ValidY):
+    index = 190
+
+    time_index_pred = np.arange(ValidY.shape[1])
+    plt.plot(time_index_pred, ValidY[index,:], label="actual value")
+    plt.plot(time_index_pred, pred_validY[index], label="pred value")
+    plt.xlabel('time index')
+
+    if option == 'V':
+        plt.ylabel('Valve Position')
+        plt.title('Valve Position Prediction in Next 2 hours')
+    else:
+        plt.ylabel('Primary Airflow ')
+        plt.title(f'Primary Airflow Prediction in Next 2 hours')
+
+    plt.savefig('sample.png')
+    
+    
+    
+    
+    
+
 
 if __name__ == '__main__':
     import fire
