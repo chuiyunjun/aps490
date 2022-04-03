@@ -71,9 +71,8 @@ def generate_block(option):
     d = data.Data(data_root='./prediction/datasets/all/',option=option)
     df = d.get_og_data()
     df['DateTime'] = pd.to_datetime(df['DateTime'])
-    df.sort_values(by='DateTime', inplace=True)
     df.set_index('DateTime', inplace=True)
-
+    df.sort_index(inplace=True)
     df.columns = [format_names(col) for col in df.columns]
     name = df.columns[1]
     scaler = MinMaxScaler()
@@ -88,7 +87,7 @@ def generate_block(option):
     p = select_option(option)
     model = torch.load(p, map_location=torch.device('cpu'))
     model.eval()
-    last48 = np.array(norm_df[-24 - 48:-24]).reshape(1, 48, 5)
+    last48 = np.array(norm_df[-24 - 48:-24]).reshape(1, 48, 8)
     x = torch.from_numpy(last48).float()
     with torch.no_grad():
         predict = model(x)
@@ -120,15 +119,15 @@ def select_option(option ='V'):
     type = st.selectbox("Select Model", options=('GRU', 'LSTM'), index=0, key=option)
     if type == 'GRU':
         if option =='V':
-            p = r'/Users/shxryz/aps490/output/GRU_ValveModel.pth'
+            p = r'/Users/shxryz/aps490/output/ValveModel.pth'
         else:
-            p = r'/Users/shxryz/aps490/output/GRU_AirFlowModel.pth'
+            p = r'/Users/shxryz/aps490/output/AirFlowModel.pth'
     else:
         # TODO: UPDATE FOR LSTM
         if option =='V':
-            p = r'/Users/shxryz/aps490/output/GRU_ValveModel.pth'
+            p = r'/Users/shxryz/aps490/output/ValveModel.pth'
         else:
-            p = r'/Users/shxryz/aps490/output/GRU_AirFlowModel.pth'
+            p = r'/Users/shxryz/aps490/output/AirFlowModel.pth'
     return p
 
 

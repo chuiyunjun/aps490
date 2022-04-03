@@ -27,8 +27,7 @@ def train(
     num_layers: int = 1,
     loss: str = 'huber_0.022',
     model: str = 'gru',
-    option: str = 'V',
-    ui: bool = True
+    option: str = 'V'
 ) -> None:
     random.seed(seed)
     np.random.seed(seed)
@@ -54,7 +53,8 @@ def train(
         'num_layers': num_layers,
         'input_size': normalized_data.shape[1],
         'loss': loss,
-        'model': model
+        'model': model,
+        'option': option
     }
 
     name = params['model'] + '_' + params['option'] + '_'
