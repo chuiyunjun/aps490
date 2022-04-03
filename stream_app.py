@@ -119,15 +119,15 @@ def select_option(option ='V'):
     type = st.selectbox("Select Model", options=('GRU', 'LSTM'), index=0, key=option)
     if type == 'GRU':
         if option =='V':
-            p = r'/Users/shxryz/aps490/output/ValveModel.pth'
+            p = './output/ValveModel.pth'
         else:
-            p = r'/Users/shxryz/aps490/output/AirFlowModel.pth'
+            p = './output/AirFlowModel.pth'
     else:
         # TODO: UPDATE FOR LSTM
         if option =='V':
-            p = r'/Users/shxryz/aps490/output/ValveModel.pth'
+            p = './output/ValveModel.pth'
         else:
-            p = r'/Users/shxryz/aps490/output/AirFlowModel.pth'
+            p = './output/AirFlowModel.pth'
     return p
 
 
