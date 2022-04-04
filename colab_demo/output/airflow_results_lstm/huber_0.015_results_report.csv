@@ -1,0 +1,9 @@
+index,num_epochs,batch_num,learning_rate,dropout,input_size,hidden_size,num_layers,num_classes,seq_length,pred_length,train_size,validation_size,test_size,optimizer,validation loss,test_mae_loss,test_mape_loss
+0,1200,1,0.008,0,8,4,1,24,48,24,55000,5000,10000,huber_0.015,"Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.008
+    weight_decay: 0
+)",0.0002676229632925242,16.524279,0.06656956
