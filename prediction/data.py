@@ -66,7 +66,6 @@ class Data:
         self._mng['DateTime'] = pd.to_datetime(self._mng.DateTime)
         self._mng['DateTime 2'] = self._mng['DateTime'].dt.floor('h')
         data = pd.merge(self._mng, self._weather, how='left', on = 'DateTime 2')
-        data.to_csv('data.csv')
         data = data.dropna(how='any')
         data.rename(columns = {'DateTime_x': datetime}, inplace = True)
         data = data[self.INPUT_LIST]
@@ -75,6 +74,7 @@ class Data:
         data['week_of_year'] = [i.weekofyear for i in data.index]
         data['hour'] = [i.hour for i in data.index]
         data['is_weekday'] = [i.isoweekday() for i in data.index]
+        data.to_csv('data.csv')
         return data
     
     def normalize_data(self):
