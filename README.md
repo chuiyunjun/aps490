@@ -37,7 +37,7 @@ $ conda activate aps490
 ## 2. Training
 * You may use the following command to train the model.
 ```shell
-$ python -m predection.main train
+$ python -m prediction.main train
 ```
 Keyword arguments:
 - (optional)`data_root`: training dataset directory root. Default: `./prediction/datasets/train/`
