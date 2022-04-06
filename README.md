@@ -1,6 +1,6 @@
 # Predictive Building System Maintenance -- Anomaly Detection
 
-(For simplified demo on Google Colab, save "colab_demo" folder to your Google Drive or view it here: https://drive.google.com/file/d/1FwafCGFpnnft0bUER9L9gcMgOXJAw_sW/view?usp=sharing).
+(For simplified demo on Google Colab, save "APS490" folder to your Google Drive or view it here: https://drive.google.com/file/d/1FwafCGFpnnft0bUER9L9gcMgOXJAw_sW/view?usp=sharing).
 
 
 ## 1. Recommanded environment setting
